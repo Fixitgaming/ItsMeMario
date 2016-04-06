@@ -62,6 +62,7 @@
     <Compile Include="DataBases\DangerousSpells.cs" />
     <Compile Include="DataBases\ProtectSpells.cs" />
     <Compile Include="DataBases\ShieldSpells.cs" />
+    <Compile Include="DataBases\Skins.cs" />
     <Compile Include="EntitiesHelper.cs" />
     <Compile Include="HPPrediction.cs" />
     <Compile Include="Initializer.cs" />

@@ -24,7 +24,7 @@ namespace Mario_s_Template
         private static void Loading_OnLoadingComplete(EventArgs args)
         {
             //Put the name of the champion here
-            if (Player.Instance.ChampionName != "NameOfTheChampion") return;
+            //if (Player.Instance.ChampionName != "NameOfTheChampion") return;
 
             SpellsManager.InitializeSpells();
             Menus.CreateMenu();
