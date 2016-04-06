@@ -4,7 +4,7 @@ using EloBuddy.SDK.Menu;
 
 namespace Mario_s_Lib
 {
-    public static class  Spells
+    public static class Spells
     {
         public static bool CanCast(this Obj_AI_Base target, Spell.SpellBase spell, Menu m)
         {

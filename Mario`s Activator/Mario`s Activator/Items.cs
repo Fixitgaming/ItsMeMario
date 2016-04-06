@@ -62,14 +62,18 @@ namespace Mario_s_Activator
 
     internal class WardsAndTrinkets
     {
+        public static List<Item> Detectors = new List<Item>
+        {
+            new Item(ItemId.Sweeping_Lens_Trinket, 650),
+            new Item(ItemId.Oracle_Alteration, 650),
+            new Item(ItemId.Vision_Ward, 650),
+        };
+
         public static List<Item> WardsAndTrinketsItems = new List<Item>
         {
-            new Item(ItemId.Vision_Ward, 650),
             new Item(ItemId.Greater_Stealth_Totem_Trinket, 650),
             new Item(ItemId.Warding_Totem_Trinket, 650),
-            new Item(ItemId.Oracle_Alteration, 650),
-            new Item(ItemId.Sweeping_Lens_Trinket, 650),
-            new Item(ItemId.Farsight_Alteration, 4000),
-        }; 
+            new Item(ItemId.Farsight_Alteration, 1000),
+        };
     }
 }

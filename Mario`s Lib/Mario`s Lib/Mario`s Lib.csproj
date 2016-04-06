@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,9 +56,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorSlider.cs" />
     <Compile Include="Damages.cs" />
+    <Compile Include="DangerHandler.cs" />
+    <Compile Include="DataBases\DangerousSpells.cs" />
+    <Compile Include="DataBases\ProtectSpells.cs" />
+    <Compile Include="DataBases\ShieldSpells.cs" />
     <Compile Include="EntitiesHelper.cs" />
     <Compile Include="HPPrediction.cs" />
+    <Compile Include="Initializer.cs" />
     <Compile Include="MenuHelper.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

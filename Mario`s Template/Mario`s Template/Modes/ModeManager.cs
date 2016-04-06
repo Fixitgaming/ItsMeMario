@@ -8,11 +8,18 @@ namespace Mario_s_Template.Modes
 {
     internal class ModeManager
     {
+        /// <summary>
+        /// Create the event on tick
+        /// </summary>
         public static void InitializeModes()
         {
             Game.OnTick += Game_OnTick;
         }
 
+        /// <summary>
+        /// This event is triggered every tick of the game
+        /// </summary>
+        /// <param name="args"></param>
         private static void Game_OnTick(EventArgs args)
         {
             var orbMode = Orbwalker.ActiveModesFlags;

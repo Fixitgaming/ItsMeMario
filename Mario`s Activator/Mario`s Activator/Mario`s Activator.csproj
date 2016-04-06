@@ -46,6 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Dropbox\Mario`s Activator\DLLs\EloBuddy.SDK.dll</HintPath>
     </Reference>
+    <Reference Include="Mario`s Lib">
+      <HintPath>..\..\Mario`s Lib\Mario`s Lib\bin\Debug\Mario`s Lib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\..\Dropbox\Mario`s Activator\DLLs\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -63,17 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activator.cs" />
-    <Compile Include="DangerHandler.cs" />
-    <Compile Include="Spells\DangerousSpells.cs" />
+    <Compile Include="Revealer.cs" />
     <Compile Include="Drawings.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Items.cs" />
     <Compile Include="MyMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Spells\ProtectSpells.cs" />
-    <Compile Include="Spells\ShieldSpells.cs" />
-    <Compile Include="Spells\SummonerSpells.cs" />
+    <Compile Include="SummonerSpells.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

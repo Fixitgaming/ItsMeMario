@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EloBuddy;
 
-namespace Mario_s_Activator.Spells
+namespace Mario_s_Lib.DataBases
 {
     public class ProtectSpell
     {
@@ -37,7 +37,7 @@ namespace Mario_s_Activator.Spells
             new ProtectSpell(Champion.Taric, SpellSlot.Q),
             new ProtectSpell(Champion.Thresh, SpellSlot.W),
             new ProtectSpell(Champion.Zilean, SpellSlot.E),
-            new ProtectSpell(Champion.Shen, SpellSlot.R),
-        }; 
+            new ProtectSpell(Champion.Shen, SpellSlot.R)
+        };
     }
 }

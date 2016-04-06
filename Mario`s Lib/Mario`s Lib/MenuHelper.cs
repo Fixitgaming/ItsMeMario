@@ -55,6 +55,23 @@ namespace Mario_s_Lib
             }
         }
 
+        public static void CreateKeyBind(this Menu m, string displayName, string uniqueId, uint defaultKey1, uint defaultKey2,
+            KeyBind.BindTypes bindtype = KeyBind.BindTypes.PressToggle, bool defaultValue = true)
+        {
+            try
+            {
+                m.Add(uniqueId, new KeyBind(displayName, defaultValue, bindtype, defaultKey1, defaultKey2));
+            }
+            catch (Exception)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Error creating the checkbox with the uniqueID = ");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(uniqueId);
+                Console.ResetColor();
+            }
+        }
+
         public static bool GetCheckBoxValue(this Menu m, string uniqueId)
         {
             try
@@ -104,6 +121,23 @@ namespace Mario_s_Lib
                 Console.ResetColor();
             }
             return -1;
+        }
+
+        public static bool GetKeyBindValue(this Menu m, string uniqueId)
+        {
+            try
+            {
+                return m.Get<KeyBind>(uniqueId).CurrentValue;
+            }
+            catch (Exception)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Error getting the keybind with the uniqueID = ");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(uniqueId);
+                Console.ResetColor();
+            }
+            return false;
         }
     }
 }

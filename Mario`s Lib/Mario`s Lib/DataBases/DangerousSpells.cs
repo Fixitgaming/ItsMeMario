@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
 using EloBuddy;
 
-namespace Mario_s_Activator.Spells
+namespace Mario_s_Lib.DataBases
 {
     public class DangerousSpell
     {
+        public bool DefaultValue;
+        public int Delay;
+        public Champion Hero;
+
+        public SpellSlot Slot;
+
         public DangerousSpell(Champion hero, SpellSlot slot, bool defaultvalue = true, int delay = 0)
         {
             Slot = slot;
@@ -12,11 +18,6 @@ namespace Mario_s_Activator.Spells
             DefaultValue = defaultvalue;
             Delay = delay;
         }
-
-        public SpellSlot Slot;
-        public Champion Hero;
-        public bool DefaultValue;
-        public int Delay;
     }
 
     public class DangerousSpells
@@ -96,7 +97,7 @@ namespace Mario_s_Activator.Spells
             new DangerousSpell(Champion.Warwick, SpellSlot.R),
             new DangerousSpell(Champion.Yasuo, SpellSlot.R),
             new DangerousSpell(Champion.Zed, SpellSlot.R, true, 2850),
-            new DangerousSpell(Champion.Zyra, SpellSlot.R, true, 250),
+            new DangerousSpell(Champion.Zyra, SpellSlot.R, true, 250)
         };
     }
 }

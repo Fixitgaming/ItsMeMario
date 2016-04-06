@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using EloBuddy;
 
-namespace Mario_s_Activator.Spells
+namespace Mario_s_Lib.DataBases
 {
-
-public class ShieldSpell
+    public class ShieldSpell
     {
         public Champion Champ;
         public SpellSlot Slot;
@@ -27,7 +26,7 @@ public class ShieldSpell
             new ShieldSpell(Champion.TahmKench, SpellSlot.E),
             new ShieldSpell(Champion.Urgot, SpellSlot.W),
             new ShieldSpell(Champion.Yasuo, SpellSlot.W),
-            new ShieldSpell(Champion.Braum, SpellSlot.E),
+            new ShieldSpell(Champion.Braum, SpellSlot.E)
         };
     }
 }

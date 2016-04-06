@@ -53,7 +53,6 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorSliders.cs" />
     <Compile Include="DamageIndicator.cs" />
     <Compile Include="DrawingsManager.cs" />
     <Compile Include="Extensions.cs" />

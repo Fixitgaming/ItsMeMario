@@ -3,8 +3,9 @@ using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Menu.Values;
-using Mario_s_Activator.Spells;
-using static Mario_s_Activator.Spells.SummonerSpells;
+using Mario_s_Lib;
+using Mario_s_Lib.DataBases;
+using static Mario_s_Activator.SummonerSpells;
 using static Mario_s_Activator.MyMenu;
 
 namespace Mario_s_Activator
@@ -72,12 +73,16 @@ namespace Mario_s_Activator
             }
         }
 
+        private static int TickCount;
         private static void Game_OnTick(EventArgs args)
         {
+            if(TickCount > Environment.TickCount) return;
+
             OffensiveOnTick();
             ConsumablesOnTick();
             IgniteOnTick();
-            BushRevealerOnTick();
+            CastPoroThrower();
+            Revealer.OnTick();
 
             if (SettingsMenu.GetCheckBoxValue("dev"))
             {
@@ -86,6 +91,8 @@ namespace Mario_s_Activator
                     Chat.Print(a.ChampionName + " On danger");
                 }
             }
+
+            TickCount = Environment.TickCount + SettingsMenu.GetSliderValue("tickLimiter");
         }
 
         private static void Game_OnUpdate(EventArgs args)
@@ -127,21 +134,36 @@ namespace Mario_s_Activator
                     }
                 }
 
+                if (offItem.Id == ItemId.Titanic_Hydra && CanPost)
+                {
+                    var killMinionT =
+                        EntityManager.MinionsAndMonsters.EnemyMinions.FirstOrDefault(
+                            m => m.IsValidTarget(offItem.Range) && m.Health <= 40 + Player.Instance.MaxHealth * 0.1f);
+
+                    var countMinionT = EntityManager.MinionsAndMonsters.EnemyMinions.Count(m => m.IsValidTarget(offItem.Range));
+
+                    var targetTitanic = TargetSelector.GetTarget(offItem.Range, DamageType.Physical);
+
+
+                    if (targetTitanic != null && Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+                    {
+                        offItem.Cast();
+                        return;
+                    }
+
+                    if ((killMinionT != null || countMinionT >= 3) && Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+                    {
+                        offItem.Cast();
+                        return;
+                    }
+                    return;
+                }
+
+
                 if (SettingsMenu.GetCheckBoxValue("comboUseItems")
                     ? Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)
                     : offItem.IsReady())
                 {
-
-                    if (offItem.Id == ItemId.Titanic_Hydra && CanPost)
-                    {
-                        var targetTitanic = TargetSelector.GetTarget(offItem.Range, DamageType.Physical);
-                        if (targetTitanic != null)
-                        {
-                            offItem.Cast();
-                        }
-                        return;
-                    }
-
                     var target = TargetSelector.GetTarget(offItem.Range, DamageType.Mixed);
                     if (target != null && offItem.IsReady())
                     {
@@ -297,38 +319,22 @@ namespace Mario_s_Activator
                             EntityManager.Heroes.Allies.OrderBy(a => a.Health)
                                 .FirstOrDefault(
                                     a =>
-                                        a.IsInDanger(DefensiveMenu.GetSliderValue("slider" + (int) defItem.Id + "ally")) &&
+                                        a.IsInDanger( DefensiveMenu.GetSliderValue("slider" + (int) defItem.Id + "ally")) &&
                                         a.IsValidTarget(defItem.Range));
                         if (ally != null)
                         {
                             defItem.Cast(ally);
                         }
 
-                        if (Player.Instance.IsInDanger(DefensiveMenu.GetSliderValue("slider" + (int)defItem.Id)))
+                        if (Player.Instance.IsInDanger( DefensiveMenu.GetSliderValue("slider" + (int)defItem.Id)))
                         {
                             defItem.Cast(Player.Instance);
                         }
                         return;
                 }
-                if (Player.Instance.IsInDanger(DefensiveMenu.GetSliderValue("slider" + (int) defItem.Id)))
+                if (Player.Instance.IsInDanger( DefensiveMenu.GetSliderValue("slider" + (int) defItem.Id)))
                 {
                     defItem.Cast();
-                }
-            }
-        }
-
-        private static void BushRevealerOnTick()
-        {
-            var item = WardsAndTrinkets.WardsAndTrinketsItems.FirstOrDefault(w => w.IsReady() && w.IsOwned());
-            var target = TargetSelector.GetTarget(1000, DamageType.Mixed);
-
-            if (item != null && target != null && !target.IsDead && !target.IsHPBarRendered &&
-                target.Position.ToNavMeshCell().CollFlags.HasFlag(CollisionFlags.Grass))
-            {
-                var closestGrass = ObjectManager.Get<GrassObject>().OrderBy(g => g.Distance(target)).FirstOrDefault(g => g.IsInRange(Player.Instance, item.Range));
-                if (closestGrass != null)
-                {
-                    item.Cast(closestGrass.Position);
                 }
             }
         }
@@ -337,7 +343,7 @@ namespace Mario_s_Activator
 
         private static void SmiteOnTick()
         {
-            if (!PlayerHasSmite || !Smite.IsReady() || Smite == null || SummonerMenu.GetKeybindValue("smiteKeybind")) return;
+            if (!PlayerHasSmite || !Smite.IsReady() || Smite == null || SummonerMenu.GetKeyBindValue("smiteKeybind")) return;
 
             Obj_AI_Base GetJungleMinion;
 
@@ -427,7 +433,7 @@ namespace Mario_s_Activator
 
         private static void BarrierOnTick()
         {
-            if (PlayerHasBarrier && SummonerMenu.GetCheckBoxValue("check" + "barrier") && Player.Instance.IsInDanger(SummonerMenu.GetSliderValue("slider" + "barrier")))
+            if (PlayerHasBarrier && SummonerMenu.GetCheckBoxValue("check" + "barrier") && Player.Instance.IsInDanger( SummonerMenu.GetSliderValue("slider" + "barrier")))
             {
                 Barrier.Cast();
             }
@@ -440,7 +446,7 @@ namespace Mario_s_Activator
                 var ally =
                     EntityManager.Heroes.Allies.OrderBy(a => a.Health)
                         .FirstOrDefault(
-                            a => a.IsValidTarget(Heal.Range) && !a.IsMe && a.IsInDanger(SummonerMenu.GetSliderValue("slider" + "heal" + "ally")));
+                            a => a.IsValidTarget(Heal.Range) && !a.IsMe && a.IsInDanger( SummonerMenu.GetSliderValue("slider" + "heal" + "ally")));
                 if (ally != null)
                 {
                     Heal.Cast();
@@ -449,6 +455,22 @@ namespace Mario_s_Activator
                 {
                     Heal.Cast();
                 }
+            }
+        }
+
+        private static void CastPoroThrower()
+        {
+            if (!PlayerHasPoroThrower) return;
+
+            if (!PoroThrower.IsReady() || !SummonerMenu.GetCheckBoxValue("check" + "snowball") ||
+                PoroThrower.Name.ToLower().Contains("snowballfollowupcast")) return;
+
+            var targetPoro = TargetSelector.GetTarget(PoroThrower.Range, DamageType.True);
+            if (targetPoro != null && targetPoro.IsValid)
+            {
+                var tpp = PoroThrower.GetPrediction(targetPoro);
+                if (tpp.HitChancePercent >= 85)
+                    PoroThrower.Cast(tpp.CastPosition);
             }
         }
 

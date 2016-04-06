@@ -4,7 +4,7 @@ using EloBuddy.SDK;
 
 namespace Mario_s_Lib
 {
-    public static class EntitiesManager
+    public static class EntitiesHelper
     {
         public static Obj_AI_Base GetJungleMinion(this Spell.SpellBase spell)
         {
@@ -16,12 +16,41 @@ namespace Mario_s_Lib
 
         public static int CountEnemyLaneMinions(this Obj_AI_Base target, float range = 100)
         {
-            return EntityManager.MinionsAndMonsters.GetLaneMinions().Count(m => m.Distance(target) <= range);
+            return EntityManager.MinionsAndMonsters.GetLaneMinions().Count(m => m.Distance(target) <= range && m.IsEnemy);
         }
 
-        public static int CountEnemyJungleMinions(this Obj_AI_Base target, float range = 100)
+        public static int CountAllyLaneMinions(this Obj_AI_Base target, float range = 100)
+        {
+            return EntityManager.MinionsAndMonsters.GetLaneMinions().Count(m => m.Distance(target) <= range && m.IsAlly);
+        }
+
+        public static int CountJungleMinions(this Obj_AI_Base target, float range = 100)
         {
             return EntityManager.MinionsAndMonsters.GetJungleMonsters().Count(m => m.Distance(target) <= range);
+        }
+
+        /// <summary>
+        ///     Get nearest ally
+        /// </summary>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public static AIHeroClient GetNearestAlly(float range = 700)
+        {
+            return EntityManager.Heroes.Allies.OrderBy(a => a.Distance(Player.Instance))
+                .FirstOrDefault(ally => ally.IsInRange(Player.Instance, range));
+        }
+
+        /// <summary>
+        ///     Get the nearest and lowest health ally
+        /// </summary>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public static AIHeroClient GetNearestLowestAlly(float range = 700)
+        {
+            return
+                EntityManager.Heroes.Allies.OrderBy(a => a.Distance(Player.Instance))
+                    .ThenBy(a => a.Health)
+                    .FirstOrDefault(ally => ally.IsInRange(Player.Instance, range));
         }
     }
 }

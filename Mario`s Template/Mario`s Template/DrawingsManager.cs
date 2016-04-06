@@ -16,6 +16,10 @@ namespace Mario_s_Template
             DamageIndicator.Init();
         }
 
+        /// <summary>
+        /// Normal drawings
+        /// </summary>
+        /// <param name="args"></param>
         private static void Drawing_OnDraw(EventArgs args)
         {
             var readyDraw = DrawingsMenu.GetCheckBoxValue("readyDraw");
@@ -41,6 +45,10 @@ namespace Mario_s_Template
             }
         }
 
+        /// <summary>
+        /// This drawing will override some of the lol`s, like healthbars menus and atc
+        /// </summary>
+        /// <param name="args"></param>
         private static void Drawing_OnEndScene(EventArgs args)
         {
         }

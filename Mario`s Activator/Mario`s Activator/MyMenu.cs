@@ -5,9 +5,9 @@ using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
-using Mario_s_Activator.Spells;
-using SharpDX;
-using static Mario_s_Activator.Spells.SummonerSpells;
+using Mario_s_Lib;
+using Mario_s_Lib.DataBases;
+using static Mario_s_Activator.SummonerSpells;
 
 namespace Mario_s_Activator
 {
@@ -45,8 +45,8 @@ namespace Mario_s_Activator
             OffensiveMenu.CreateCheckBox("Use hydra.", "check3074");
             OffensiveMenu.CreateSlider("Use it if the ENEMY health is lower than ({0}%).", "slider3074", 90);
             OffensiveMenu.AddGroupLabel("Titanic Hydra");
-            OffensiveMenu.CreateCheckBox("Use titanic hydra.", "check3053");
-            OffensiveMenu.CreateSlider("Use it if the ENEMY health is lower than ({0}%).", "slider3053", 90);
+            OffensiveMenu.CreateCheckBox("Use titanic hydra.", "check"+ (int)ItemId.Titanic_Hydra);
+            OffensiveMenu.CreateSlider("Use it if the ENEMY health is lower than ({0}%).", "slider" + (int)ItemId.Titanic_Hydra, 90);
             OffensiveMenu.AddGroupLabel("Youmuus");
             OffensiveMenu.CreateCheckBox("Use youmuus.", "check3142");
             OffensiveMenu.CreateSlider("Use it if the ENEMY health is lower than ({0}%).", "slider3142", 70);
@@ -181,7 +181,7 @@ namespace Mario_s_Activator
             if (PlayerHasSmite)
             {
                 SummonerMenu.AddGroupLabel("Smite");
-                SummonerMenu.CreateKeybind("Disable Smite", "smiteKeybind", 'Z');
+                SummonerMenu.CreateKeyBind("Disable Smite", "smiteKeybind", 'Z', 'U');
                 SummonerMenu.CreateCheckBox("Draw smite range.", "drawSmiteRange");
                 SummonerMenu.CreateCheckBox("Draw smite damage on jungle minions HP.", "drawSmiteDamage");
                 
@@ -293,24 +293,31 @@ namespace Mario_s_Activator
             DrawingMenu.AddGroupLabel("All drawings settings");
             DrawingMenu.CreateCheckBox("Disable all drawings", "disableDrawings", false);
 
+            DrawingMenu.AddGroupLabel("Offensive Items");
+            DrawingMenu.CreateCheckBox("Bilgewater Cutlass", "draw" + (int)ItemId.Bilgewater_Cutlass);
+            DrawingMenu.CreateCheckBox("Blade of the ruined king", "draw" + (int)ItemId.Blade_of_the_Ruined_King);
+            DrawingMenu.CreateCheckBox("Tiamat", "draw" + (int)ItemId.Tiamat);
+            DrawingMenu.CreateCheckBox("Ravenous Hydra", "draw" + (int)ItemId.Ravenous_Hydra);
+            DrawingMenu.CreateCheckBox("Titanic Hydra", "draw" + (int)ItemId.Titanic_Hydra);
+            DrawingMenu.CreateCheckBox("Youmuus GhostBlade", "draw" + (int)ItemId.Youmuus_Ghostblade);
+            DrawingMenu.CreateCheckBox("Hextech GunBlade", "draw" + (int)ItemId.Hextech_Gunblade);
+
+            DrawingMenu.AddGroupLabel("Defensive Items");
+            DrawingMenu.CreateCheckBox("Face of the mountain", "draw" + (int)ItemId.Face_of_the_Mountain);
+            DrawingMenu.CreateCheckBox("Locket Of the Iron Solari", "draw" + (int)ItemId.Locket_of_the_Iron_Solari);
+            DrawingMenu.CreateCheckBox("Randuins", "draw" + (int)ItemId.Randuins_Omen);
+            DrawingMenu.CreateCheckBox("Ohmwrecker", "draw" + (int)ItemId.Ohmwrecker);
+
             #endregion Drawings
 
             #region Settings
-
+            SettingsMenu.AddGroupLabel("Danger Options");
+            SettingsMenu.AddLabel("Please go to the Mario`s Lib menu and configure the danger settings there");
             SettingsMenu.AddGroupLabel("Offensive items options");
             SettingsMenu.CreateCheckBox("Use offensive items only in combo", "comboUseItems");
-            SettingsMenu.AddGroupLabel("Danger Options");
-            SettingsMenu.CreateSlider("Add [{0}%] to the item HP% slider if the spell is dangerous", "dangerSlider", 10, 10,50);
-            SettingsMenu.AddLabel("Dont mess with the options if you dont know what they do");
-            SettingsMenu.CreateSlider("Extra range to be safe of a skillshot", "saferange", 110, 80, 180);
-
-            //Spells Menu
-            SettingsMenu.AddGroupLabel("Spells to consider");
-            SettingsMenu.AddLabel("Disable/Enable dangerous spells");
-            foreach (var s in EntityManager.Heroes.Enemies.SelectMany(e => DangerousSpells.Spells.Where(s => s.Hero == e.Hero)))
-            {
-                SettingsMenu.CreateCheckBox(s.Hero + "`s " + s.Slot, "dangSpell" + s.Hero + s.Slot);
-            }
+            SettingsMenu.AddGroupLabel("Improve FPS");
+            SettingsMenu.AddLabel("The higher the slider below is, the more fps you will get and the slower the tick will be");
+            SettingsMenu.CreateSlider("Tick Limiter", "tickLimiter", 0, 0, 1000);
             SettingsMenu.AddSeparator();
             SettingsMenu.AddGroupLabel("Debug Settings");
             SettingsMenu.CreateCheckBox("Enable developer debugging.", "dev", false);

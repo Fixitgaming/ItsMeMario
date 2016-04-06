@@ -28,6 +28,7 @@ namespace Mario_s_Template
         public static Menu DrawingsMenu;
         public static Menu MiscMenu;
 
+        //These colorslider are from Mario`s Lib
         public static ColorSlide QColorSlide;
         public static ColorSlide WColorSlide;
         public static ColorSlide EColorSlide;

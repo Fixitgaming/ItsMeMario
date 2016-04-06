@@ -11,6 +11,9 @@ using Line = EloBuddy.SDK.Rendering.Line;
 
 namespace Mario_s_Template
 {
+    /// <summary>
+    /// It draws the damage on the enemies HealthBar
+    /// </summary>
     internal class DamageIndicator
     {
         //Offsets

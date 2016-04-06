@@ -6,6 +6,11 @@ namespace Mario_s_Template
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Get total damge using the custom values provided by you in the spellmanager
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public static float GetTotalDamage(this Obj_AI_Base target)
         {
             var slots = new[] {SpellSlot.Q, SpellSlot.W, SpellSlot.E, SpellSlot.R};
@@ -15,6 +20,11 @@ namespace Mario_s_Template
             return dmg;
         }
 
+        /// <summary>
+        /// Gets the minion that can be lasthitable by the spell using the custom damage provided by you in spellmanager
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <returns></returns>
         public static Obj_AI_Minion GetLastHitMinion(this Spell.SpellBase spell)
         {
             return
@@ -25,6 +35,11 @@ namespace Mario_s_Template
                             m.IsEnemy);
         }
 
+        /// <summary>
+        /// Gets the hero that can be killable by the spell using the custom damage provided by you in spellmanager
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <returns></returns>
         public static AIHeroClient GetKillableHero(this Spell.SpellBase spell)
         {
             return
