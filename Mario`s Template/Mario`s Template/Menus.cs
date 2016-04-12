@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK.Menu;
-using EloBuddy.SDK.Menu.Values;
 using Mario_s_Lib;
 
 namespace Mario_s_Template
@@ -104,25 +102,13 @@ namespace Mario_s_Template
             KillStealMenu.AddGroupLabel("Settings");
             KillStealMenu.CreateSlider("Mana must be lower than [{0}%] to use Killsteal spells", "manaSlider", 30);
 
-            MiscMenu.AddGroupLabel("Skin Changer");
-            
-            var skinList = Mario_s_Lib.DataBases.Skins.SkinsDB.FirstOrDefault(list => list.Champ == Player.Instance.Hero);
-            if (skinList != null)
-            {
-                MiscMenu.CreateComboBox("Choose the skin", "skinComboBox", skinList.Skins);
-                MiscMenu.Get<ComboBox>("skinComboBox").OnValueChange += delegate(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs args)
-                {
-                    Player.Instance.SetSkinId(sender.CurrentValue);
-                };
-            }
-
             MiscMenu.AddGroupLabel("Auto Level UP");
             MiscMenu.CreateCheckBox("Activate Auto Leveler", "activateAutoLVL", false);
             MiscMenu.AddLabel("The auto leveler will always focus R than the rest of the spells");
             MiscMenu.CreateComboBox("1st Spell to focus", "firstFocus", new List<string> {"Q", "W", "E"});
             MiscMenu.CreateComboBox("2nd Spell to focus", "secondFocus", new List<string> {"Q", "W", "E"}, 1);
             MiscMenu.CreateComboBox("3rd Spell to focus", "thirdFocus", new List<string> {"Q", "W", "E"}, 2);
-            MiscMenu.CreateSlider("Delay slider", "delaySlider", 200, 150, 500);
+            MiscMenu.CreateSlider("Delay slider", "delaySlider", 150, 100, 500);
 
             DrawingsMenu.AddGroupLabel("Setting");
             DrawingsMenu.CreateCheckBox(" - Draw Spell`s range only if they are ready.", "readyDraw");

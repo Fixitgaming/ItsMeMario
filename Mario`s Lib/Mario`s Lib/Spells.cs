@@ -8,7 +8,7 @@ namespace Mario_s_Lib
     {
         public static bool CanCast(this Obj_AI_Base target, Spell.SpellBase spell, Menu m)
         {
-            if (spell == null || target == null) return false;
+            if (spell == null) return false;
             return target.IsValidTarget(spell.Range) && spell.IsReady() && m.GetCheckBoxValue(spell.Slot.ToString().ToLower() + "Use");
         }
 
