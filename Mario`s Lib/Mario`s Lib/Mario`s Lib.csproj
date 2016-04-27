@@ -59,12 +59,12 @@
     <Compile Include="ColorSlider.cs" />
     <Compile Include="Damages.cs" />
     <Compile Include="DangerHandler.cs" />
+    <Compile Include="DataBases\CollisionCount.cs" />
     <Compile Include="DataBases\DangerousSpells.cs" />
     <Compile Include="DataBases\ProtectSpells.cs" />
     <Compile Include="DataBases\ShieldSpells.cs" />
     <Compile Include="DataBases\Skins.cs" />
     <Compile Include="EntitiesHelper.cs" />
-    <Compile Include="HPPrediction.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="MenuHelper.cs" />
     <Compile Include="Misc.cs" />

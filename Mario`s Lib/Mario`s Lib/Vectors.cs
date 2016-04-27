@@ -28,9 +28,13 @@ namespace Mario_s_Lib
             var farmLocation = Prediction.Position.PredictCircularMissileAoe(minions, spell.Range, spell.Width,
                 spell.CastDelay, spell.Speed).OrderByDescending(r => r.GetCollisionObjects<Obj_AI_Minion>().Length).FirstOrDefault();
 
-            if (farmLocation != null && farmLocation.HitChancePercent >= hitchance && farmLocation.CollisionObjects.Length >= count)
+            if (farmLocation != null && farmLocation.HitChancePercent >= hitchance)
             {
-                return farmLocation.CastPosition;
+                var predictedMinion = farmLocation.GetCollisionObjects<Obj_AI_Minion>();
+                if (predictedMinion.Length >= count)
+                {
+                    return farmLocation.CastPosition;
+                }
             }
 
             return Vector3.Zero;
@@ -66,16 +70,21 @@ namespace Mario_s_Lib
 
             if (castPos != null && castPos.HitChancePercent >= hitchance)
             {
-                return castPos.CastPosition;
+                var herosPredicted = castPos.GetCollisionObjects<AIHeroClient>();
+                if (herosPredicted.Length >= count)
+                {
+                    return castPos.CastPosition;
+                }
             }
 
             return Vector3.Zero;
         }
 
-        public static BestCastPosition GetBestLinearCastPosition(IEnumerable<AIHeroClient> entities, float width, int range,
-            Vector2? sourcePosition = null)
+        public static BestCastPosition GetBestLinearCastPosition(this Spell.Skillshot spell, Vector2? sourcePosition = null)
         {
-            var targets = entities.ToArray();
+            var targets =
+                EntityManager.Heroes.Enemies.Where(m => m.IsValidTarget(spell.Range)).ToArray();
+
             switch (targets.Length)
             {
                 case 0:
@@ -96,10 +105,10 @@ namespace Mario_s_Lib
             var minionCount = 0;
             var result = Vector2.Zero;
 
-            foreach (var pos in posiblePositions.Where(o => o.IsInRange(startPos, range)))
+            foreach (var pos in posiblePositions.Where(o => o.IsInRange(startPos, spell.Range)))
             {
-                var endPos = startPos + range*(pos - startPos).Normalized();
-                var count = targets.Count(o => o.ServerPosition.To2D().Distance(startPos, endPos, true, true) <= width*width);
+                var endPos = startPos + spell.Range*(pos - startPos).Normalized();
+                var count = targets.Count(o => o.ServerPosition.To2D().Distance(startPos, endPos, true, true) <= spell.Width*spell.Width);
 
                 if (count >= minionCount)
                 {
@@ -109,6 +118,31 @@ namespace Mario_s_Lib
             }
 
             return new BestCastPosition {CastPosition = result.To3DWorld(), HitNumber = minionCount};
+        }
+
+        public static Vector3 GetTargetDirection(this Obj_AI_Base target)
+        {
+            return target.Direction.To2D().Perpendicular().To3D();
+        }
+
+        public static Vector3 Back(this Obj_AI_Base target, int extendedRange = 100)
+        {
+            return target.Position.Extend(target.GetTargetDirection(), -extendedRange).To3D();
+        }
+
+        public static Vector3 Front(this Obj_AI_Base target, int extendedRange = 100)
+        {
+            return target.Position.Extend(target.GetTargetDirection(), extendedRange).To3D();
+        }
+
+        public static Vector3 Right(this Obj_AI_Base target, int extendedRange = 100)
+        {
+            return target.Position.Extend(target.GetTargetDirection(), extendedRange).RotateAroundPoint(Player.Instance.Position.To2D(), 90f).To3D();
+        }
+
+        public static Vector3 Left(this Obj_AI_Base target, int extendedRange = 100)
+        {
+            return target.Position.Extend(target.GetTargetDirection(), extendedRange).RotateAroundPoint(Player.Instance.Position.To2D(), 270f).To3D();
         }
 
         public struct BestCastPosition

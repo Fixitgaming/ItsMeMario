@@ -16,7 +16,7 @@ namespace Mario_s_Template.Modes
         /// </summary>
         public static void Execute()
         {
-            var target = TargetSelector.GetTarget(1000, DamageType.Mixed);
+            var target = TargetSelector.GetTarget(SpellList.GetHighestRange(), DamageType.Mixed);
 
             Q.TryToCast(target, AutoHarassMenu);
             W.TryToCast(target, AutoHarassMenu);

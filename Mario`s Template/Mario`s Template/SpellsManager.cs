@@ -1,5 +1,9 @@
-﻿using EloBuddy;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Enumerations;
 using Mario_s_Lib;
 using static Mario_s_Template.Menus;
 
@@ -19,7 +23,9 @@ namespace Mario_s_Template
         public static Spell.Targeted Q;
         public static Spell.Active W;
         public static Spell.Active E;
-        public static Spell.Targeted R;
+        public static Spell.Skillshot R;
+
+        public static List<Spell.SpellBase> SpellList = new List<Spell.SpellBase>();
 
         /// <summary>
         /// It sets the values to the spells
@@ -29,7 +35,12 @@ namespace Mario_s_Template
             Q = new Spell.Targeted(SpellSlot.Q, 350);
             W = new Spell.Active(SpellSlot.W, 200);
             E = new Spell.Active(SpellSlot.E, 300);
-            R = new Spell.Targeted(SpellSlot.R, 400);
+            R = SpellSlot.R.GetSkillShotData(SkillShotType.Linear);
+
+            SpellList.Add(Q);
+            SpellList.Add(W);
+            SpellList.Add(E);
+            SpellList.Add(R);
 
             Obj_AI_Base.OnLevelUp += Obj_AI_Base_OnLevelUp;
         }
@@ -44,7 +55,7 @@ namespace Mario_s_Template
         /// <returns></returns>
         public static float GetDamage(this Obj_AI_Base target, SpellSlot slot)
         {
-            var damageType = DamageType.Magical;
+            const DamageType damageType = DamageType.Magical;
             var AD = Player.Instance.FlatPhysicalDamageMod;
             var AP = Player.Instance.FlatMagicDamageMod;
             var sLevel = Player.GetSpell(slot).Level - 1;
@@ -59,7 +70,7 @@ namespace Mario_s_Template
                     if (Q.IsReady())
                     {
                         //Information of Q damage
-                        dmg += new float[] {20, 45, 70, 95, 120}[sLevel] + 1f*AD;
+                        dmg += new float[] {15, 40, 65, 90, 115}[sLevel] + new [] { 0.6f, 0.65f, 0.7f, 0.75f, 0.8f }[sLevel] * AD;
                     }
                     break;
                 case SpellSlot.W:
@@ -73,14 +84,14 @@ namespace Mario_s_Template
                     if (E.IsReady())
                     {
                         //Information of E damage
-                        dmg += new float[] {80, 110, 140, 170, 200}[sLevel];
+                        dmg += new float[] {0, 0, 0, 0, 0}[sLevel];
                     }
                     break;
                 case SpellSlot.R:
                     if (R.IsReady())
                     {
                         //Information of R damage
-                        dmg += new float[] {600, 840, 1080}[sLevel]*0.6f + 1.2f*AP;
+                        dmg += new float[] {20, 60, 95, 130 ,165}[sLevel]+ 0.45f*AP;
                     }
                     break;
             }
@@ -114,19 +125,39 @@ namespace Mario_s_Template
                 Player.Instance.Spellbook.LevelSpell(SpellSlot.R);
             }
 
-            if (Player.Instance.Spellbook.CanSpellBeUpgraded(GetSlotFromComboBox(MiscMenu.GetComboBoxValue("firstFocus"))))
+            var firstFocusSlot = GetSlotFromComboBox(MiscMenu.GetComboBoxValue("firstFocus"));
+            var secondFocusSlot = GetSlotFromComboBox(MiscMenu.GetComboBoxValue("secondFocus"));
+            var thirdFocusSlot = GetSlotFromComboBox(MiscMenu.GetComboBoxValue("thirdFocus"));
+
+            var secondSpell = Player.GetSpell(secondFocusSlot);
+            var thirdSpell = Player.GetSpell(thirdFocusSlot);
+
+            if (Player.Instance.Spellbook.CanSpellBeUpgraded(firstFocusSlot))
             {
-                Player.Instance.Spellbook.LevelSpell(GetSlotFromComboBox(MiscMenu.GetComboBoxValue("firstFocus")));
+                if (!secondSpell.IsLearned)
+                {
+                    Player.Instance.Spellbook.LevelSpell(secondFocusSlot);
+                }
+                if (!thirdSpell.IsLearned)
+                {
+                    Player.Instance.Spellbook.LevelSpell(thirdFocusSlot);
+                }
+                Player.Instance.Spellbook.LevelSpell(firstFocusSlot);
             }
 
-            if (Player.Instance.Spellbook.CanSpellBeUpgraded(GetSlotFromComboBox(MiscMenu.GetComboBoxValue("secondFocus"))))
+            if (Player.Instance.Spellbook.CanSpellBeUpgraded(secondFocusSlot))
             {
-                Player.Instance.Spellbook.LevelSpell(GetSlotFromComboBox(MiscMenu.GetComboBoxValue("secondFocus")));
+                if (!thirdSpell.IsLearned)
+                {
+                    Player.Instance.Spellbook.LevelSpell(thirdFocusSlot);
+                }
+                Player.Instance.Spellbook.LevelSpell(firstFocusSlot);
+                Player.Instance.Spellbook.LevelSpell(secondFocusSlot);
             }
 
-            if (Player.Instance.Spellbook.CanSpellBeUpgraded(GetSlotFromComboBox(MiscMenu.GetComboBoxValue("thirdFocus"))))
+            if (Player.Instance.Spellbook.CanSpellBeUpgraded(thirdFocusSlot))
             {
-                Player.Instance.Spellbook.LevelSpell(GetSlotFromComboBox(MiscMenu.GetComboBoxValue("thirdFocus")));
+                Player.Instance.Spellbook.LevelSpell(thirdFocusSlot);
             }
         }
 
@@ -148,6 +179,39 @@ namespace Mario_s_Template
             }
             Chat.Print("Failed getting slot");
             return SpellSlot.Unknown;
+        }
+
+        public static bool DoDynamicKillSteal(List<Spell.SpellBase> spells)
+        {
+            var target =
+                EntityManager.Heroes.Enemies.OrderBy(e => e.Health)
+                    .ThenByDescending(TargetSelector.GetPriority)
+                    .ThenBy(e => e.FlatArmorMod)
+                    .ThenBy(e => e.FlatMagicReduction)
+                    .FirstOrDefault(e => e.IsValidTarget(spells.GetSmallestRange()) && !e.HasUndyingBuff());
+
+            if (target != null)
+            {
+                var dmg = spells.Where(spell => spell.IsReady()).Sum(spell => target.GetDamage(spell.Slot));
+                var delay = spells.Sum(s => s.CastDelay);
+                var targetPredictedHealth = Prediction.Health.GetPrediction(target, delay);
+
+                if (targetPredictedHealth <= dmg)
+                {
+                    foreach (var spell in spells.Where(s => target.CanCastSpell(s)))
+                    {
+                        try
+                        {
+                            spell.Cast();
+                        }
+                        catch (Exception)
+                        {
+                            spell.Cast(target);
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }

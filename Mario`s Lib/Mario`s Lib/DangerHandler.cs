@@ -59,7 +59,6 @@ namespace Mario_s_Lib
     {
         public static List<MissileClient> Missiles = new List<MissileClient>();
         public static List<TargetSpell> TargettedSpells = new List<TargetSpell>();
-        public static List<NotMissile> NotMissiles = new List<NotMissile>();
         public static List<TurretAA> TurretAAs = new List<TurretAA>();
 
         public static void Init()
@@ -130,12 +129,6 @@ namespace Mario_s_Lib
                     TargettedSpells.Add(targettedSpell);
                     Core.DelayAction(() => TargettedSpells.Remove(targettedSpell), 80);
                 }
-                if (target == null)
-                {
-                    var notMissile = new NotMissile(args.Start, args.End, senderHero, senderHero.Hero, args.Slot, args.SData.Name);
-                    NotMissiles.Add(notMissile);
-                    Core.DelayAction(() => NotMissiles.Remove(notMissile), 80);
-                }
             }
         }
 
@@ -153,6 +146,7 @@ namespace Mario_s_Lib
                 var dangTargSpell =
                     DangerousSpells.Spells.FirstOrDefault(
                         s => s.Hero == normalTargSpell?.Champ && s.Slot == normalTargSpell.Slot);
+
                 if (dangTargSpell != null && target.HealthPercent <= percent + sliderPercent)
                 {
                     return true;
@@ -208,37 +202,6 @@ namespace Mario_s_Lib
                 }
 
                 return missile.Distance(target) <= boundingRadius && target.HealthPercent <= percent;
-
-
-                /*
-                    if (NotMissiles.Any())
-                    {
-                        var hueSPell = NotMissiles.FirstOrDefault(s => s.End.Distance(target.Position) <= 2200);
-
-                        if (hueSPell != null)
-                        {
-                            var projection = target.Position.To2D().ProjectOn(hueSPell.Start.To2D(), hueSPell.End.To2D());
-                            if (!projection.IsOnSegment) return false;
-
-                            //If there`s a missile with the same name as the skillshot that it got from obj process cast
-                            var missileSameName = Missiles.FirstOrDefault(m => m.SData.Name.ToLower().Contains(hueSPell.SName.ToLower()));
-                            if (missileSameName != null) return false;
-                            //
-                            var spellInfo = SpellDatabase.GetSpellInfoList(hueSPell.Caster).FirstOrDefault(s => s.Slot == hueSPell.Slot);
-                            if (spellInfo != null)
-                            {
-                                var segementPoint = projection.SegmentPoint.Distance(target.Position) <=
-                                                    spellInfo.Radius + target.BoundingRadius + SettingsMenu.GetSliderValue("saferange");
-
-                                if (segementPoint)
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-
-                    */
             }
             return false;
         }

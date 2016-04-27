@@ -6,7 +6,6 @@ using System.Reflection;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
-using Mario_s_Lib;
 using Version = System.Version;
 
 namespace Mario_s_Activator
@@ -49,7 +48,7 @@ namespace Mario_s_Activator
                     var internetVersion = new Version(new StreamReader(stream).ReadToEnd());
                     if (internetVersion != LocalVersion)
                     {
-                        Chat.Print("New version found("+internetVersion+") of Mario`s Activator please update it.(Load it anyway type /load)", Color.DarkCyan);
+                        Chat.Print("New version found("+internetVersion+") of Mario`s Activator please update it.(To load it anyway type /load)", Color.DarkCyan);
                     }
                     else
                     {
@@ -93,7 +92,6 @@ namespace Mario_s_Activator
             {
                 if (!ActivatorLoaded)
                 {
-                    Initializer.InitiliazeDangerHandler();
                     Activator.Init();
                     ActivatorLoaded = true;
                 }

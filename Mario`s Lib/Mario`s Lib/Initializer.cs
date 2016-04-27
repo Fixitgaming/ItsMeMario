@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Menu;
 using Mario_s_Lib.DataBases;
@@ -7,13 +8,17 @@ namespace Mario_s_Lib
 {
     public static class Initializer
     {
-        private static readonly Menu FirstMenu = MainMenu.AddMenu("Mario`s Lib Options", "marioalibb");
-        public static Menu SettingsMenu = FirstMenu.AddSubMenu("• Danger Settings", "dangersettings");
-        public static void InitiliazeDangerHandler()
-        {
+        public static Menu SettingsMenu;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="m">Your first menu</param>
+        public static void InitiliazeDangerHandler(this Menu m)
+        {
             DangerHandler.Init();
 
+            SettingsMenu = m.AddSubMenu("• Danger Settings", "dangersettings");
             SettingsMenu.AddGroupLabel("Danger Options");
             SettingsMenu.CreateSlider("Add [{0}%] to the item HP% slider if the spell is dangerous", "dangerSlider", 10, 10, 50);
             SettingsMenu.AddLabel("Dont mess with the options if you dont know what they do");

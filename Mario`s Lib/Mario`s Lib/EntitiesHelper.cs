@@ -52,5 +52,16 @@ namespace Mario_s_Lib
                     .ThenBy(a => a.Health)
                     .FirstOrDefault(ally => ally.IsInRange(Player.Instance, range));
         }
+
+        public static AIHeroClient GetThebestTarget(this Spell.SpellBase spell)
+        {
+            return
+                EntityManager.Heroes.Enemies.OrderBy(e => e.Health)
+                    .ThenByDescending(TargetSelector.GetPriority)
+                    .ThenBy(e => e.FlatArmorMod)
+                    .ThenBy(e => e.FlatMagicReduction)
+                    .FirstOrDefault(e => e.IsValidTarget(spell.Range) && !e.HasUndyingBuff());
+        }
+
     }
 }

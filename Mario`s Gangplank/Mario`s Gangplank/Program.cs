@@ -1,4 +1,5 @@
 ﻿using System;
+using EloBuddy;
 using EloBuddy.SDK.Events;
 
 namespace Mario_sGangplank
@@ -13,6 +14,8 @@ namespace Mario_sGangplank
 
         private static void Loading_OnLoadingComplete(EventArgs args)
         {
+            if(Player.Instance.Hero != Champion.Gangplank)return;
+
             try
             {
                 Spells.InitSpells();

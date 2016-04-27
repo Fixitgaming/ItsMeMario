@@ -52,7 +52,7 @@ namespace Mario_s_Template.Modes
                 JungleClear.Execute();
             }
 
-            if (playerMana > AutoHarassMenu.GetSliderValue("manaSlider"))
+            if (playerMana > AutoHarassMenu.GetSliderValue("manaSlider") && AutoHarassMenu.GetKeyBindValue("autoHarassKey"))
             {
                 AutoHarass.Execute();
             }

@@ -19,6 +19,7 @@ namespace Mario_s_Activator
         }
 
         #region DrawLine
+
         internal static int Height;
         internal static int Width;
         internal static int OffsetX;
@@ -121,19 +122,22 @@ namespace Mario_s_Activator
         private static void DrawLine(Obj_AI_Base unit)
         {
             var barPos = unit.HPBarPosition;
-            var percentHealthAfterDamage = Math.Max(0, unit.Health - SmiteDamage()) / (unit.MaxHealth + unit.AllShield + unit.AttackShield + unit.MagicShield);
-            var currentHealthPercentage = unit.Health / (unit.MaxHealth + unit.AllShield + unit.AttackShield + unit.MagicShield);
-            var startPoint = barPos.X + OffsetX + (percentHealthAfterDamage * Width);
-            var endPoint = barPos.X + OffsetX + (currentHealthPercentage * Width);
+            var percentHealthAfterDamage = Math.Max(0, unit.Health - SmiteDamage())/
+                                           (unit.MaxHealth + unit.AllShield + unit.AttackShield + unit.MagicShield);
+            var currentHealthPercentage = unit.Health/(unit.MaxHealth + unit.AllShield + unit.AttackShield + unit.MagicShield);
+            var startPoint = barPos.X + OffsetX + (percentHealthAfterDamage*Width);
+            var endPoint = barPos.X + OffsetX + (currentHealthPercentage*Width);
             var yPos = barPos.Y + OffsetY;
+            var canKill = SmiteDamage() - 10 > unit.Health;
 
-            Drawing.DrawLine(startPoint, yPos, endPoint, yPos, Height, Color.Beige);
+            Drawing.DrawLine(startPoint, yPos, endPoint, yPos, Height, canKill ? Color.BlueViolet : Color.Beige);
         }
+
         #endregion DrawLine
 
         private static void Drawing_OnDraw(EventArgs args)
         {
-            if(DrawingMenu.GetCheckBoxValue("disableDrawings"))return;
+            if (DrawingMenu.GetCheckBoxValue("disableDrawings")) return;
 
             if (PlayerHasSmite)
             {
@@ -143,12 +147,18 @@ namespace Mario_s_Activator
                 }
             }
 
-            foreach (var item in Offensive.OffensiveItems.Where(i => i.IsReady() && i.Range > 0).Where(item => DrawingMenu.GetCheckBoxValue("draw" + (int)item.Id)))
+            foreach (
+                var item in
+                    Offensive.OffensiveItems.Where(i => i.IsReady() && i.Range > 0)
+                        .Where(item => DrawingMenu.GetCheckBoxValue("draw" + (int) item.Id)))
             {
                 Circle.Draw(SharpDX.Color.Orange, item.Range, Player.Instance);
             }
 
-            foreach (var item in Defensive.DefensiveItems.Where(i => i.IsReady() && i.Range > 0).Where(item => DrawingMenu.GetCheckBoxValue("draw" + (int)item.Id)))
+            foreach (
+                var item in
+                    Defensive.DefensiveItems.Where(i => i.IsReady() && i.Range > 0)
+                        .Where(item => DrawingMenu.GetCheckBoxValue("draw" + (int) item.Id)))
             {
                 Circle.Draw(SharpDX.Color.BlueViolet, item.Range, Player.Instance);
             }

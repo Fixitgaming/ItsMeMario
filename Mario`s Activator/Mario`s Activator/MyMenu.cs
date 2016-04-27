@@ -13,7 +13,7 @@ namespace Mario_s_Activator
 {
     internal class MyMenu
     {
-        private static readonly Menu FirstMenu = MainMenu.AddMenu("Mario`s Activator", "marioactivatorr");
+        public static Menu FirstMenu = MainMenu.AddMenu("Mario`s Activator", "marioactivatorr");
         public static Menu OffensiveMenu = FirstMenu.AddSubMenu("• Offensive Items", "activatorOffensive");
         public static Menu DefensiveMenu = FirstMenu.AddSubMenu("• Defensive Items", "activatordefensive");
         public static Menu CleansersMenu = FirstMenu.AddSubMenu("• Cleansers", "activatorcleansers");
@@ -62,11 +62,11 @@ namespace Mario_s_Activator
             #region DefensiveMenu
 
             DefensiveMenu.AddGroupLabel("Zhonyas");
-            DefensiveMenu.CreateCheckBox("Use Zhonyas.", "check" + "3157");
-            DefensiveMenu.CreateSlider("Use it if MY health is lower than ({0}%).", "slider" + "3157", 20);
+            DefensiveMenu.CreateCheckBox("Use Zhonyas.", "check" + (int)ItemId.Zhonyas_Hourglass);
+            DefensiveMenu.CreateSlider("Use it if MY health is lower than ({0}%).", "slider" + (int)ItemId.Zhonyas_Hourglass, 25);
             DefensiveMenu.AddGroupLabel("Seraph");
-            DefensiveMenu.CreateCheckBox("Use Seraph.", "check" + "3040");
-            DefensiveMenu.CreateSlider("Use it if MY health is lower than ({0}%).", "slider" + "3040", 20);
+            DefensiveMenu.CreateCheckBox("Use Seraph.", "check" + (int)ItemId.Seraphs_Embrace);
+            DefensiveMenu.CreateSlider("Use it if MY health is lower than ({0}%).", "slider" + (int)ItemId.Seraphs_Embrace, 25);
             DefensiveMenu.AddGroupLabel("Face Of The Mountain");
             DefensiveMenu.CreateCheckBox("Use Face Of The Mountain.", "check" + "3401");
             DefensiveMenu.CreateSlider("Use it if MY health is lower than ({0}%).", "slider" + "3401", 10);
@@ -99,11 +99,14 @@ namespace Mario_s_Activator
             CleansersMenu.CreateCheckBox("Taunt", "ccTaunt");
             CleansersMenu.CreateCheckBox("Charm", "ccCharm");
             CleansersMenu.CreateCheckBox("Polymorph", "ccPolymorph");
+            CleansersMenu.CreateCheckBox("Duskblade of Draktharr", "ccDusk");
             CleansersMenu.AddLabel("Special spells to use cleanse");
             CleansersMenu.CreateCheckBox("Zed R", "ccZedR");
             CleansersMenu.CreateCheckBox("Vladmir R", "ccVladmirR");
             CleansersMenu.CreateCheckBox("Mordekaiser R", "ccMordekaiserR");
             CleansersMenu.CreateCheckBox("Trundle R", "ccTrundleR");
+            CleansersMenu.CreateCheckBox("Fiora R", "ccFioraR");
+            CleansersMenu.CreateCheckBox("Kalista E", "ccKalistaE");
             CleansersMenu.AddGroupLabel("Items");
             CleansersMenu.CreateCheckBox("Use Dervish Blade.", "check" + "3137");
             CleansersMenu.CreateCheckBox("Use Mercurial Scimitar.", "check" + "3139");
@@ -323,6 +326,8 @@ namespace Mario_s_Activator
             SettingsMenu.CreateCheckBox("Enable developer debugging.", "dev", false);
 
             #endregion Settings
+
+            FirstMenu.InitiliazeDangerHandler();
         }
     }
 }
